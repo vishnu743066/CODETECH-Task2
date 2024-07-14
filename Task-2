@@ -1,63 +1,87 @@
 /* Task-2 */
 
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StudentGradesManager {
+public class StudentGradesTracker {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Double> grades = new ArrayList<>();
 
-        System.out.println("Welcome to the Student Grades Manager!");
+        System.out.println("Welcome to the Student Grades Tracker!");
 
+        // Input grades
         while (true) {
-            // Prompt user to input grades
-            System.out.print("Enter a grade (or type -1 to finish): ");
-            double grade = scanner.nextDouble();
+            System.out.print("Enter a grade (or type 'done' to finish): ");
+            String input = scanner.next();
 
-            if (grade == -1) {
+            if (input.equalsIgnoreCase("done")) {
                 break;
             }
 
-            grades.add(grade);
+            try {
+                double grade = Double.parseDouble(input);
+                if (grade < 0 || grade > 100) {
+                    System.out.println("Please enter a grade between 0 and 100.");
+                } else {
+                    grades.add(grade);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a numeric grade.");
+            }
         }
 
-        // Calculate the average grade
+        // Calculate average grade
         double total = 0;
-        for (double g : grades) {
-            total += g;
+        for (double grade : grades) {
+            total += grade;
         }
-
         double average = total / grades.size();
 
         // Determine letter grade and GPA
-        String letterGrade;
-        double gpa;
+        char letterGrade = getLetterGrade(average);
+        double gpa = getGPA(letterGrade);
 
-        if (average >= 90) {
-            letterGrade = "A";
-            gpa = 4.0;
-        } else if (average >= 80) {
-            letterGrade = "B";
-            gpa = 3.0;
-        } else if (average >= 70) {
-            letterGrade = "C";
-            gpa = 2.0;
-        } else if (average >= 60) {
-            letterGrade = "D";
-            gpa = 1.0;
-        } else {
-            letterGrade = "F";
-            gpa = 0.0;
-        }
-
-        // Display the results
-        System.out.printf("Average Grade: %.2f%n", average);
+        // Display results
+        System.out.println("Average Grade: " + average);
         System.out.println("Letter Grade: " + letterGrade);
-        System.out.printf("GPA: %.2f%n", gpa);
+        System.out.println("GPA: " + gpa);
 
-        // Close the scanner
         scanner.close();
+    }
+
+    // Method to get letter grade based on average
+    public static char getLetterGrade(double average) {
+        if (average >= 90) {
+            return 'A';
+        } else if (average >= 80) {
+            return 'B';
+        } else if (average >= 70) {
+            return 'C';
+        } else if (average >= 60) {
+            return 'D';
+        } else {
+            return 'F';
+        }
+    }
+
+    // Method to get GPA based on letter grade
+    public static double getGPA(char letterGrade) {
+        switch (letterGrade) {
+            case 'A':
+                return 4.0;
+            case 'B':
+                return 3.0;
+            case 'C':
+                return 2.0;
+            case 'D':
+                return 1.0;
+            case 'F':
+                return 0.0;
+            default:
+                return 0.0;
+        }
     }
 }
